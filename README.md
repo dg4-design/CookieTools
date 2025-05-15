@@ -45,7 +45,7 @@ Game.LoadMod("https://dg4-design.github.io/CookieTools/CookieTools.js");
 - **フォーチュン自動クリック**: ニュースのフォーチュンを自動的にクリックする機能の ON/OFF
 - **黄金クッキー自動クリック**: 黄金クッキーを自動的にクリックする機能の ON/OFF
 - **大クッキー自動クリック**: 大クッキーを自動的にクリックする機能の ON/OFF
-- **大クッキークリック間隔**: 大クッキーをクリックする間隔（最速/超高速/高速/通常/遅め/低負荷）
+- **大クッキークリック間隔**: 大クッキーをクリックする間隔（超高速/高速/通常）
 
 ### コマンド
 
@@ -77,7 +77,7 @@ Game.LoadMod("https://dg4-design.github.io/CookieTools/CookieTools.js");
 #### 大クッキークリック間隔の設定
 
 - 間隔設定: `CookieTools.setBigCookieInterval(インデックス)`
-  - インデックスは 0 ～ 5 の数値（0:最速、1:超高速、2:高速、3:通常、4:遅め、5:低負荷）
+  - インデックスは 0 ～ 2 の数値（0:速い、1:超速い、2:通常）
 - 次の間隔に切替: `CookieTools.cycleBigCookieInterval()`
 
 ## 仕組み
