@@ -15,6 +15,12 @@ var CookieTools = {};
   CookieTools.fortuneInterval = 1000; // 1秒ごとにチェック
   CookieTools.goldenInterval = 500; // 0.5秒ごとにチェック
   CookieTools.bigCookieInterval = 0; // できるだけ速く
+  CookieTools.bigCookieIntervalOptions = [
+    { value: 0, label: "超高速" },
+    { value: 10, label: "高速" },
+    { value: 100, label: "通常" },
+  ];
+  CookieTools.currentBigCookieIntervalIndex = 0; // デフォルトは超高速
   CookieTools.fortuneTimerId = null;
   CookieTools.goldenTimerId = null;
   CookieTools.bigCookieTimerId = null;
@@ -159,6 +165,41 @@ var CookieTools = {};
       button.textContent = "OFF";
       button.className = "option off";
     }
+  };
+
+  // 大クッキー自動クリック間隔を設定
+  CookieTools.setBigCookieInterval = function (intervalIndex) {
+    // インデックスの範囲をチェック
+    if (intervalIndex < 0 || intervalIndex >= CookieTools.bigCookieIntervalOptions.length) {
+      return false;
+    }
+
+    // 新しい間隔を設定
+    CookieTools.currentBigCookieIntervalIndex = intervalIndex;
+    CookieTools.bigCookieInterval = CookieTools.bigCookieIntervalOptions[intervalIndex].value;
+
+    // 実行中なら再スタート
+    if (CookieTools.isBigCookieRunning && CookieTools.bigCookieTimerId) {
+      clearInterval(CookieTools.bigCookieTimerId);
+      CookieTools.bigCookieTimerId = setInterval(CookieTools.bigCookieCheck, CookieTools.bigCookieInterval);
+
+      // 通知
+      Game.Notify("大クッキー自動クリック", "クリック間隔を " + CookieTools.bigCookieIntervalOptions[intervalIndex].label + " に変更しました", [16, 5], 1);
+    }
+
+    // UI更新
+    const intervalButton = l("CookieToolsBigCookieInterval");
+    if (intervalButton) {
+      intervalButton.textContent = CookieTools.bigCookieIntervalOptions[intervalIndex].label;
+    }
+
+    return true;
+  };
+
+  // 大クッキー自動クリック間隔を次のオプションに切り替え
+  CookieTools.cycleBigCookieInterval = function () {
+    const nextIndex = (CookieTools.currentBigCookieIntervalIndex + 1) % CookieTools.bigCookieIntervalOptions.length;
+    return CookieTools.setBigCookieInterval(nextIndex);
   };
 
   // すべての機能を開始
@@ -315,6 +356,21 @@ var CookieTools = {};
       return false;
     };
     optionsTable.appendChild(bigCookieRow);
+
+    // 大クッキー自動クリック間隔の設定
+    const bigCookieIntervalRow = CookieTools.createPreferenceRow(
+      "大クッキークリック間隔",
+      "CookieToolsBigCookieInterval",
+      CookieTools.bigCookieIntervalOptions[CookieTools.currentBigCookieIntervalIndex].label,
+      "大クッキーをクリックする間隔を設定します（低い値=高速, 高い値=低負荷）"
+    );
+
+    bigCookieIntervalRow.querySelector("a.option").onclick = function () {
+      CookieTools.cycleBigCookieInterval();
+      this.textContent = CookieTools.bigCookieIntervalOptions[CookieTools.currentBigCookieIntervalIndex].label;
+      return false;
+    };
+    optionsTable.appendChild(bigCookieIntervalRow);
 
     newSection.appendChild(optionsTable);
 
