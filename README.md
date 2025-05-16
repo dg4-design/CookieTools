@@ -1,4 +1,4 @@
-# Cookie Tools 🍪 👆
+# dg4 Cookie Tools 🍪 👆
 
 Cookie Clicker 用の自動化ツールです。ニュースのフォーチュン、黄金クッキー、大クッキーを自動的にクリックします。
 
